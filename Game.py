@@ -59,7 +59,7 @@ class Game:
         pass
 
 
-    def driver(self):
+    def run(self):
 
         while True:
             for event in pygame.event.get():
