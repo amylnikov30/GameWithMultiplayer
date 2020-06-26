@@ -1,0 +1,63 @@
+//Mask Info
+Code for masks-
++ = Fine
+- = Rework
+++ = Discusion
+-- = Reincorpiration
+-+ = Has a better counterpart
+//////////////////////////////////////////
+(Note some masks where cut because they looked shit and where useless)
+1.aubery, code= --, Ability- More Guns Spawn
+
+2.Brandon, code= +, Ability- Walk Faster
+
+3.Carl, code= ++, Ability- Start With Drill
+
+4.Charlie, code= --, Ability- More melee weapons
+
+5.Dennis, code=-- and + , Ability- Start With Knife(Maybe a enchanced one ?)
+
+6.Don Juan, code= -, Ability- Lethal Doors(aka if there is an enemy infront of the door and u walk threw it it will kill them)
+
+7.Earl, code= +, Ability- Surive 2 bullets
+
+8.George, code= ++, Ability-Look further(May be too op I think)
+
+9.Graham, code= -+, Ability-Walk Faster(Brandon is better)
+
+10.Jacket, code= +, Ability-No Ablity(In for iconic saces)
+
+11.Jake, code= ++, Ability-Killing Throws(If u throw like a gun at someone it will kill them)
+
+12.Jones, code= -, Ability-More Gore
+
+13.Louie, code= ++ ? or -, Ability-Harder to spot
+
+14.Nigel, code= -, Ability-Reverse Control
+
+15.Peter, code= -, Ability-Silent Gunshots
+
+16.Phil, code= -, Ability-French Translation of dialogue(pisspor useless)
+
+17.Rami, code= +, Ability- More Rami
+
+18.Rasmus, code=-, Ability- Just Helps unlock the secret ending)
+
+19.Richtior, code= +, Ability-Start with a silent uzi
+
+20.Rick, code= ++, Ability-More Acurrate
+
+21.Rufus, code= -+, Ability-Wont Die in one bullet
+
+22.Tony, code= +, Ability-lethal fists(u can kill guys with batre fists)
+
+23.Williem, code= -, Ability-Rip and Steal(If u kill someone with space it will give u their weapon)
+
+24.Zack, code= -, Ability-Longer Combo Window
+
+//Amount of Each Code Used
+Fine- 6
+Rework - 8
+Discusion - 4
+Reincorpartion - 3
+Has a better counterpart- 2
