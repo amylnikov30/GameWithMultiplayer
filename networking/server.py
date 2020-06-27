@@ -5,4 +5,5 @@
 #
 #
 
-import Client
+import socket
+import pickle

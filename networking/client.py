@@ -6,4 +6,5 @@
 #
 #
 
-import Server
+import socket
+import pickle
