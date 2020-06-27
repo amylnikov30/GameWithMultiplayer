@@ -6,3 +6,4 @@ gadgets:
 1.Gadget the u can poke threw wall and it quickly flashes a light inside the room to see if there is anyone in there 
   Details:
   Max 3?
+2.Electricity boxes that randomly spawn around the map that if you flip on they light up a random room around the map
