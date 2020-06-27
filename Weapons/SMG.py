@@ -4,10 +4,16 @@ import os
 
 
 from Weapon import Weapon
-
+from Types import WeaponType
 
 
 class SMG(Weapon):
 
-    def __init__(self):   #add more args
-        pass
+    def __init__(self, name, ammo, damage, firerate):   #add more args
+        self.name = name
+        self.ammo = ammo
+        self.damage = damage
+        self.firerate = firerate
+
+
+        super().__init__(self.name, self.ammo, self.damage, self.firerate, WeaponType.smg)
