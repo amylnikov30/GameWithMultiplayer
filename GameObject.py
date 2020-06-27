@@ -9,4 +9,6 @@ class GameObject:
         self.position = position
         self.gotype = gotype
 
-        
+    
+
+    
