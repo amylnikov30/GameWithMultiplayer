@@ -3,7 +3,8 @@
     3 levels (best of 3 or x) 
 pre alpha testing masks:
 (will go with the ones that are fine)
-1.Brandon(to test speed)
+1.Brandon(to test speed) - speed multiplier
 2.Jacket(just as a default mask)
 3.Richtior(to test out guns)
 4.Dennis(to test out melee)
+5.Graham - speed mulitplier

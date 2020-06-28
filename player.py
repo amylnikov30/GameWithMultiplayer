@@ -1,10 +1,12 @@
 import pygame
 import sys
 import os
+import math
 
 from gameObject import GameObject
 from position import Position
 from typeEnums import GameObjectType
+
 
 pygame.init()
 
@@ -37,13 +39,30 @@ class Player(GameObject):
         #print(self.x)
         #print(self.y)
 
-        window.blit(pygame.transform.rotate(self.mask, self.rotation), (self.x, self.y))
+        img = pygame.transform.rotate(self.mask, self.rotation)
+
+        window.blit(img, (self.x - int(img.get_width()/2), self.y - int(img.get_height()/2)))
 
     
     def rotate(self, window, angle):
         #window.blit(pygame.transform.rotate(self.mask, angle), (self.x, self.y))
 
+        
+
         self.rotation = angle
+
+    def rotateMouse(self):
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        rel_x, rel_y = mouse_x - self.x, mouse_y - self.y
+        angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
+        
+        self.rotation = angle
+        
+        
+        #self.image = pygame.transform.rotate(self.mask, int(angle))
+        #self.rect = self.image.get_rect(center=self.position)    
+             
 
     
     def eventRotate(self, window, event):

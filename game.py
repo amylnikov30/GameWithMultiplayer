@@ -12,7 +12,14 @@ class Game:
 
 
     def __init__(self, gamemode, id, player: Player):
+        
+        
         pygame.init()
+        pygame.mouse.set_visible(False)
+
+        self.cursor = pygame.image.load('resource/img/cursors/crosshair.png')
+
+
         self.gamemode = gamemode
         self.id = id
         self.player = player
@@ -38,6 +45,15 @@ class Game:
         "Renders the fonts as passed from display_fps"
         text_to_show = fnt.render(what, 0, pygame.Color(color))
         self.window.blit(text_to_show, where)
+
+    def renderCursor(self):
+
+        pos = pygame.mouse.get_pos()
+
+        self.window.blit(self.cursor, pos)
+        
+        
+
 
     def displayFps(self):
         "Data that will be rendered and blitted in _display"
@@ -143,7 +159,12 @@ class Game:
 
                 #for player in self.players:
                 self.player.move(self.window, event)
+                self.player.rotateMouse()
                 #self.player.eventRotate(self.window, event)
+
+            
+
+            self.renderCursor()
 
             self.player.changePos(fps)
             
