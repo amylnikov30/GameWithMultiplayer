@@ -18,3 +18,19 @@ class GameObject(pygame.Rect):
 
     def render(self, window):
         pygame.draw.rect(window, self.model, (self.x, self.y, self.width, self.height)) 
+
+
+
+
+class GameObject2(pygame.sprite.Sprite):
+
+    def __init__(self):
+
+        self.model = pygame.Surface((50, 50))
+        self.model.fill((0, 255, 0)) 
+        self.mesh = self.model.get_rect()
+
+        super().__init__(self)
+
+    
+    

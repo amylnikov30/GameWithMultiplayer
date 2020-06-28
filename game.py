@@ -165,6 +165,7 @@ class Game:
             
 
             self.renderCursor()
+            
 
             self.player.changePos(fps)
             
