@@ -12,15 +12,16 @@ class Game:
 
 
     def __init__(self, gamemode, id, player: Player):
+        pygame.init()
         self.gamemode = gamemode
         self.id = id
         self.player = player
 
-        self.width = 500
-        self.height = 500
+        self.width = 1920
+        self.height = 1080
 
-        self.window = pygame.display.set_mode((self.width, self.height))
-        self.fps = pygame.time.Clock()
+        self.window = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+        self.clock = pygame.time.Clock()
 
         self.bgColor = (0, 34, 64)
 
@@ -31,7 +32,26 @@ class Game:
     def renderGO(self, go: GameObject):
 
         pygame.draw.rect(self.window, go.model, self.player)
-    
+
+
+    def renderText(self, fnt, what, color, where):
+        "Renders the fonts as passed from display_fps"
+        text_to_show = fnt.render(what, 0, pygame.Color(color))
+        self.window.blit(text_to_show, where)
+
+    def displayFps(self):
+        "Data that will be rendered and blitted in _display"
+        self.renderText(
+            pygame.font.SysFont("Arial", 25),
+            what=str(int(self.clock.get_fps())),
+            color="white",
+            where=(10, 10))
+
+
+    def renderModel(self, go, path):
+
+        img = pygame.image.load(path).convert_alpha()
+        self.window.blit(img, (go.x, go.y))
 
     def renderWindow(self):
 
@@ -110,27 +130,34 @@ class Game:
     def run(self):
 
         while True:
+            fps = self.clock.tick(300)
             self.window.fill(self.bgColor)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
 
                 #for player in self.players:
-                self.player.move(event)
-            
-            #self.player.x += self.player.movementx
-            #self.player.y += self.player.movementy
-            #print("movementx: " + str(self.player.movementx))
-            #print("movementy: " + str(self.player.movementy))
+                self.player.move(self.window, event)
+                #self.player.eventRotate(self.window, event)
 
-            self.stayInside()
-
-            self.player.changePos()
+            self.player.changePos(fps)
             
 
-            pygame.draw.rect(self.window, (255, 0, 0), self.player)
+            self.player.stayInside(self.width, self.height)
+
+            
+            
+
+            #pygame.draw.rect(self.window, (255, 0, 0), self.player)
+            self.player.render(self.window)
+            self.displayFps()
             pygame.display.update()
+            #print(str(int(self.fps.get_fps())))
             #self.renderWindow()
-            self.fps.tick(200)
+            #self.clock.tick(200)
 
