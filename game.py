@@ -164,7 +164,7 @@ class Game:
 
             
 
-            self.renderCursor()
+            
             
 
             self.player.changePos(fps)
@@ -177,6 +177,7 @@ class Game:
 
             #pygame.draw.rect(self.window, (255, 0, 0), self.player)
             self.player.render(self.window)
+            self.renderCursor()
             self.displayFps()
             pygame.display.update()
             #print(str(int(self.fps.get_fps())))

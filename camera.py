@@ -8,8 +8,8 @@ class Camera:
     def __init__(self, width, height):
         self.camera = pygame.Rect(0, 0, width, height)
         self.width = width
-        self.height = heigth
+        self.height = height
 
 
-    def apply(self, go):
-        return go.rect.move(self.camera.topleft)
+    '''def apply(self, go):
+        return go.rect.move(self.camera.topleft)'''

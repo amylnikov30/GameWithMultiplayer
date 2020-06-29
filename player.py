@@ -51,30 +51,11 @@ class Player(pygame.sprite.Sprite):
 
         img = pygame.transform.rotate(self.mask, self.rotation)
 
-        #self.mesh = self.mask.get_rect()
-        #self.mesh.center = self.
 
-        #self.mesh = img.get_bounding_rect()
+        #pygame.draw.rect(window, (255, 0, 0), self.mesh) #drawing the mesh
 
         self.mesh = img.get_rect(center=center)
         
-
-        #print(f"rectx: {img.get_rect().x}; recty: {img.get_rect().y}")
-        #print(f"maskx: {self.mask.x}; masky: {self.mask.y}")
-
-
-        #rect = pygame.draw.rect(window, (255, 0, 0), (self.x, self.y, self.width, self.height))
-        #rotatedRect = pygame.transform.rotate(rect, self.rotation)
-
-        #pygame.draw.rect(window, (255, 0, 0), self.mesh)
-
-        #window.blit(rotatedRect)
-
-        #window.blit(img, (self.mesh.x - int(img.get_width()/2), self.mesh.y - int(img.get_height()/2)))
-
-        #window.blit(img, ((self.mesh.left + self.mesh.width)/2, (self.mesh.top + self.mesh.height)/2))
-
-        #window.blit(img, (self.mesh.center))
 
         window.blit(img, self.mesh)
 

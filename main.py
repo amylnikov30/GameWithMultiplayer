@@ -15,7 +15,7 @@ game.run()'''
 
 
 
-p1 = Player("Player1", Position(100, 100), 100, 100, "george")
+p1 = Player("Player1", Position(100, 100), 100, 100, "tony")
 p2 = Player("Player2", Position(300, 400), 100, 100, "aubery")
 
 game = Game(GamemodeType.deathmatch, 42069, p1)
