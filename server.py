@@ -58,7 +58,7 @@ class Server:
             #
 
 
-            start_new_thread(self.threadedClient, (conn,))
+            start_new_thread(self.threadedClient, (conn, 0))
             # thread = threading.Thread(target=handleClient, args=(conn, addr))
             # thread.start()
             # print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
@@ -66,7 +66,7 @@ class Server:
 
 
     def threadedClient(self, conn, player):
-        conn.send(self.players[player])
+        conn.send(pickle.dumps(self.players[player]))
         reply = ""
         while True:
             try:
@@ -100,7 +100,7 @@ class Server:
     def threadedClient2(self, conn, p, gameId):
         pass
 
-
-game = Game()
-server = Server(game)
-server.run()
+if __name__ == "__main__":
+        game = Game()
+        server = Server(game)
+        server.run()

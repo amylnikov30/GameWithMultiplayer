@@ -8,7 +8,7 @@ import pickle
 from player import Player
 from network import Network
 from game import Game
-from server import Server
+#from server import Server
 
 class Client:
 
@@ -36,8 +36,16 @@ class Client:
     def main(self):
 
         #self.p = self.network.getId()
+
+
+
         self.network = Network()
+
+        #print(f"Client {socket.gethostname()} has connected to server {self.network.server}")
+
         self.p = self.network.getId()
+
+
 
         while True:
             self.game.new()
