@@ -1,0 +1,29 @@
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+W                              W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+
+
+//Type "W" to place a wall
+//Type "P" to place a player
+//White space to place air

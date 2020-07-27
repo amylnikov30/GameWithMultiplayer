@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pygame.Surface((TILESIZE, TILESIZE))
+        self.image.fill(DARKBLUE)
         self.rect = self.image.get_rect()
         self.velx = 0
         self.vely = 0
