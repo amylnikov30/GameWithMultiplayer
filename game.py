@@ -4,7 +4,7 @@ import os
 
 from settings import *
 from player import Player
-from map import Wall
+from map import *
 from network import Network
 
 class Game:
@@ -19,10 +19,31 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
+        self.map = Map("importedMap")
+
         #self.loadData()
 
         #def loadData(self):
             #pass
+
+    def loadData(self):
+        root = os.path.dirname(__file__)
+        mapFolder = os.path.join(root, 'maps')
+        self.map = []
+        mapFile = open(os.path.join(root, 'testMap0.txt'), 'rt')
+        for line in mapFile:
+            self.map.append(line)
+
+
+    def loadMap(self):
+        for row, tiles in enumerate(self.map.data):
+            for col, tile in enumerate(tiles):
+                if tile == 'W':
+                    Wall(self, col, row)
+                if tile == 'P':
+                    self.player = Player(self, col, row)
+
+
 
     def renderText(self, font, what, color, where):
         text_to_show = font.render(what, 0, pygame.Color(color))
@@ -42,17 +63,23 @@ class Game:
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
 
-        self.player1 = Player(self, 5, 5)
-        self.player2 = Player(self, 10, 10)
-        self.networkPlayers = [Player]
-        self.networkPlayers.append(self.player1); self.networkPlayers.append(self.player2)
+        #self.player = Player(self, 5, 5)
+
+        self.loadMap()
+        self.camera = Camera(self.map.width, self.map.height)
+
+        #self.player1 = Player(self, 5, 5)
+        #self.player2 = Player(self, 10, 10)
+        #self.networkPlayers = [Player]
+        #self.networkPlayers.append(self.player1); self.networkPlayers.append(self.player2)
 
 
-        for x in range(5, 15):
-            Wall(self, x, 15)
+        # for x in range(5, 15):
+        #     Wall(self, x, 15)
 
     def update(self):
         self.sprites.update()
+        self.camera.update(self.player)
 
 
     def network(self):
@@ -61,14 +88,15 @@ class Game:
 
 
     def run(self):
-        self.player1 = self.network.getId()
+        #self.player1 = self.network.getId()
         while True:
             #self.p2 = self.network.send(self.p)
-            self.player2 = self.network.send(self.player1)
+            #self.player2 = self.network.send(self.player1)
+            self.fps = self.clock.tick(300)
             self.events()
             self.update()
             self.render()
-            self.fps = self.clock.tick(300)
+
 
 
     def quit(self):
@@ -84,10 +112,14 @@ class Game:
     def render(self):
         self.window.fill(BGCOLOR)
         self.drawGrid()
-        self.sprites.draw(self.window)
-        for i in self.networkPlayers:
-            i.update()
-            i.draw()
+        #self.sprites.draw(self.window)
+
+        for sprite in self.sprites:
+            self.window.blit(sprite.image, self.camera.apply(sprite))
+
+        # for i in self.networkPlayers:
+        #     i.update()
+        #     i.draw()
         self.displayFps()
         pygame.display.update()
 
@@ -143,13 +175,13 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.quit()
-                if event.key == pygame.K_a or pygame.LEFT:
-                    self.player.move(dx=-1)
-                    #return -1
-                if event.key == pygame.K_d or pygame.RIGHT:
-                    self.player.move(dx=1)
-                    #return 1
-                if event.key == pygame.K_w or pygame.UP:
-                    self.player.move(dy=-1)
-                if event.key == pygame.K_s or pygame.DOWN:
-                    self.player.move(dy=1)
+            #     if event.key == pygame.K_a:
+            #         self.player.move(dx=-1)
+            #         #return -1
+            #     if event.key == pygame.K_d:
+            #         self.player.move(dx=1)
+            #         #return 1
+            #     if event.key == pygame.K_w:
+            #         self.player.move(dy=-1)
+            #     if event.key == pygame.K_s:
+            #         self.player.move(dy=1)
