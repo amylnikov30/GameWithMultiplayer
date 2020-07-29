@@ -12,8 +12,8 @@ class Game:
 
 
     def __init__(self, gamemode, id, player: Player):
-        
-        
+
+
         pygame.init()
         pygame.mouse.set_visible(False)
 
@@ -35,7 +35,7 @@ class Game:
         #self.movmentx = 0
         #self.movmenty = 0
 
-    
+
     def renderGO(self, go: GameObject):
 
         pygame.draw.rect(self.window, go.model, self.player)
@@ -51,8 +51,8 @@ class Game:
         pos = pygame.mouse.get_pos()
 
         self.window.blit(self.cursor, pos)
-        
-        
+
+
 
 
     def displayFps(self):
@@ -104,7 +104,7 @@ class Game:
                 if event.key == ord("d"):
                     player.position.x -= player.vel
 
-        
+
     def move2(self, player, event):
         #for event in pygame.event.get():
 
@@ -130,7 +130,7 @@ class Game:
             if event.key == pygame.K_d:
                 self.player.movementx -= player.vel
 
-    
+
     def stayInside(self):
         if self.player.top <= 0:
             self.player.top = 0
@@ -139,7 +139,7 @@ class Game:
         if self.player.right >= self.width:
             self.player.right = self.width
         if self.player.left <= 0:
-            self.player.left = 0   
+            self.player.left = 0
 
 
 
@@ -162,20 +162,20 @@ class Game:
                 self.player.rotateMouse()
                 #self.player.eventRotate(self.window, event)
 
-            
 
-            
-            
+
+
+
 
             self.player.changePos(fps)
-            
+
 
             self.player.stayInside(self.width, self.height)
 
-            
-            
 
-            #pygame.draw.rect(self.window, (255, 0, 0), self.player)
+
+
+            pygame.draw.rect(self.window, (255, 0, 0), self.player.mesh)
             self.player.render(self.window)
             self.renderCursor()
             self.displayFps()
@@ -183,4 +183,3 @@ class Game:
             #print(str(int(self.fps.get_fps())))
             #self.renderWindow()
             #self.clock.tick(200)
-

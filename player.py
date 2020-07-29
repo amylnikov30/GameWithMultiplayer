@@ -4,6 +4,7 @@ import pygame
 from settings import *
 from gameObject import GameObject
 import math
+from map import meshCollision
 
 vector = pygame.math.Vector2
 
@@ -13,36 +14,72 @@ class Player(pygame.sprite.Sprite):
         self.groups = game.sprites, game.players
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface((TILESIZE, TILESIZE))
-        self.image.fill(DARKBLUE)
-        self.rect = self.image.get_rect()
-        self.velx = 0
-        self.vely = 0
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
+        self.image = self.game.playerMask
+        #self.image.fill(DARKBLUE)
+        self.rect = self.image.get_rect(center=(x, y))
+        # self.velx = 0
+        # self.vely = 0
+        self.vel = vector(0, 0)
+        self.pos = vector(x, y) * TILESIZE
+        self.mesh = PLAYER_MESH
+        self.mesh.center = self.rect.center
+        # self.x = x * TILESIZE
+        # self.y = y * TILESIZE
         self.rotation = 0
+
+    def collideRect(self, first, second):
+        first.rect.collide_rect(second.rect)
+
 
 
     def getKeys(self):
-        self.velx, self.vely = 0, 0
+        self.vel = vector(0, 0)
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_w]:
-            self.vely = -PLAYER_SPEED
+            self.vel.y = -PLAYER_SPEED
             self.rotation = 90
         if keys[pygame.K_a]:
-            self.velx = -PLAYER_SPEED
+            self.vel.x = -PLAYER_SPEED
             self.rotation = 180
         if keys[pygame.K_s]:
-            self.vely = PLAYER_SPEED
+            self.vel.y = PLAYER_SPEED
             self.rotation = 270
         if keys[pygame.K_d]:
-            self.velx = PLAYER_SPEED
+            self.vel.x = PLAYER_SPEED
             self.rotation = 0
 
-        if self.velx != 0 and self.vely != 0:
-            self.velx *= 0.7071
-            self.vely *= 0.7071
+        if keys[pygame.K_LSHIFT]:
+            if keys[pygame.K_w]:
+                self.vel.y = -WALKING_SPEED
+                self.rotation = 90
+            if keys[pygame.K_a]:
+                self.vel.x = -WALKING_SPEED
+                self.rotation = 180
+            if keys[pygame.K_s]:
+                self.vel.y = WALKING_SPEED
+                self.rotation = 270
+            if keys[pygame.K_d]:
+                self.vel.x = WALKING_SPEED
+                self.rotation = 0
+
+        if keys[pygame.K_LCTRL]:
+            if keys[pygame.K_w]:
+                self.vel.y = -DUCKING_SPEED
+                self.rotation = 90
+            if keys[pygame.K_a]:
+                self.vel.x = -DUCKING_SPEED
+                self.rotation = 180
+            if keys[pygame.K_s]:
+                self.vel.y = DUCKING_SPEED
+                self.rotation = 270
+            if keys[pygame.K_d]:
+                self.vel.x = DUCKING_SPEED
+                self.rotation = 0
+
+
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel *= 0.7071
 
 
     def wallCollisionOld(self, dx, dy):
@@ -53,39 +90,59 @@ class Player(pygame.sprite.Sprite):
 
     def wallCollision(self, direction):
         if direction == 'x':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+            hits = pygame.sprite.spritecollide(self, self.game.walls, False, meshCollision)
             if hits:
-                if self.velx > 0:
-                    self.x = hits[0].rect.left - self.rect.width
-                if self.velx < 0:
-                    self.x = hits[0].rect.right
-                self.velx = 0
-                self.rect.x = self.x
+                if self.vel.x > 0:
+                    self.pos.x = hits[0].rect.left - self.mesh.width / 2
+                if self.vel.x < 0:
+                    self.pos.x = hits[0].rect.right + self.mesh.width / 2
+                self.vel.x = 0
+                self.mesh.centerx = self.pos.x
         if direction == 'y':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+            hits = pygame.sprite.spritecollide(self, self.game.walls, False, meshCollision)
             if hits:
-                if self.vely > 0:
-                    self.y = hits[0].rect.top - self.rect.height
-                if self.vely < 0:
-                    self.y = hits[0].rect.bottom
-                self.vely = 0
-                self.rect.y = self.y
+                if self.vel.y > 0:
+                    self.pos.y = hits[0].rect.top - self.mesh.height / 2
+                if self.vel.y < 0:
+                    self.pos.y = hits[0].rect.bottom + self.mesh.height / 2
+                self.vel.y = 0
+                self.mesh.centery = self.pos.y
+
+    def wallCollision2(self, group, direction):
+        if direction == 'x':
+            hits = pygame.self.selfcollide(self, group, False, collide_rect)
+            if hits:
+                if hits[0].rect.centerx > self.rect.centerx:
+                    self.x = hits[0].rect.left - self.rect.width / 2
+                if hits[0].rect.centerx < self.rect.centerx:
+                    self.x = hits[0].rect.right + self.rect.width / 2
+                self.velx = 0
+                self.rect.centerx = self.pos.x
+        if direction == 'y':
+            hits = pygame.self.selfcollide(self, group, False, collide_rect)
+            if hits:
+                if hits[0].rect.centery > self.rect.centery:
+                    self.pos.y = hits[0].rect.top - self.rect.height / 2
+                if hits[0].rect.centery < self.rect.centery:
+                    self.pos.y = hits[0].rect.bottom + self.rect.height / 2
+                self.vel.y = 0
+                self.rect.centery = self.pos.y
+
+    def rotate(self):
+        if self.rotation == 90 or self.rotation == 270:
+            self.image = pygame.Surface((40, 30))
+            self.rect = self.image.get_rect()
+        elif self.rotation == 0 or self.rotation == 180:
+            self.image = pygame.Surface((30, 40))
+            self.rect = self.image.get_rect()
 
     def rotateMouse(self):
 
-        center = self.rect.center
-
-
-        mousex, mousey = pygame.mouse.get_pos()
-        relx, rely = mousex - self.rect.x, mousey - self.rect.y
-        angle = (180 / math.pi) * -math.atan2(rely, relx)
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        rel_x, rel_y = mouse_x - self.pos.x, mouse_y - self.pos.y
+        angle = math.degrees(-math.atan2(rel_y, rel_x))
 
         self.rotation = angle
-
-        self.image = pygame.transform.rotate(self.image, self.rotation)
-
-        self.rect = self.image.get_rect(center=center)
-
 
     def move(self, dx=0, dy=0):
         if not self.wallCollision(dx, dy):
@@ -93,11 +150,19 @@ class Player(pygame.sprite.Sprite):
             self.y = dy
 
     def update(self):
+        #self.rect = self.image.get_rect()
+        center = self.rect.center
         self.getKeys()
-        #self.rotateMouse()
-        self.x += self.velx * self.game.fps / 1000
-        self.y += self.vely * self.game.fps / 1000
-        self.rect.x = self.x
+        self.rotateMouse()
+        self.image = pygame.transform.rotate(self.game.playerMask, self.rotation)
+        self.rect = self.image.get_rect(center=center)
+        #self.mesh = self.image.get_rect(center=center)
+        self.rect.center = self.pos
+        self.pos += self.vel * self.game.fps / 1000
+        self.mesh.centerx = self.pos.x
         self.wallCollision('x')
-        self.rect.y = self.y
+        self.mesh.centery = self.pos.y
         self.wallCollision('y')
+        self.rect.center = self.mesh.center
+
+        #self.game.window.blit(self.image, self.game.camera.apply(self)

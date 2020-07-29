@@ -24,4 +24,4 @@ game = Game(GamemodeType.deathmatch, 42069, p1)
 p1.load()
 
 if __name__ == "__main__":
-    game.run() 
+    game.run()

@@ -19,29 +19,58 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
-        self.map = Map("importedMap")
 
-        #self.loadData()
+
+        self.loadData()
 
         #def loadData(self):
             #pass
 
     def loadData(self):
+        # root = os.path.dirname(__file__)
+        # mapFolder = os.path.join(root, 'maps')
+        # self.map = []
+        # mapFile = open(os.path.join(root, 'testMap0.txt'), 'rt')
+        #  for line in mapFile:
+        #      self.map.append(line)
         root = os.path.dirname(__file__)
-        mapFolder = os.path.join(root, 'maps')
-        self.map = []
-        mapFile = open(os.path.join(root, 'testMap0.txt'), 'rt')
-        for line in mapFile:
-            self.map.append(line)
+        maps = os.path.join(root, 'maps')
+        resource = os.path.join(root, 'resource')
+        img = os.path.join(resource, 'img')
+        models = os.path.join(img, 'models')
+        masks = os.path.join(models, 'masks')
+
+        self.playerMask = pygame.image.load(os.path.join(masks, 'charlie32.png')).convert_alpha()
+
+        self.map = Map('shipment')
+        #self.mapSurface = self.map.makeMap()
+        #self.mapRect = self.mapSurface.get_rect()
+
+
 
 
     def loadMap(self):
+        # for row, tiles in enumerate(self.map.data):
+        #     for col, tile in enumerate(tiles):
+        #         if tile == 'W':
+        #             Wall(self, col, row)
+        #         if tile == 'P':
+        #             self.player = Player(self, col, row)
+
+        for tileObject in self.map.tmx.objects:
+            if tileObject.type == "player":
+                self.player = Player(self, tileObject.x, tileObject.y)
+            if tileObject.type == "wall":
+                Obstacle(self, tileObject.x, tileObject.y)
+
+    def loadMapLegacy(self):
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == 'W':
                     Wall(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
+
 
 
 
@@ -65,17 +94,9 @@ class Game:
 
         #self.player = Player(self, 5, 5)
 
-        self.loadMap()
+        self.loadMapLegacy()
         self.camera = Camera(self.map.width, self.map.height)
 
-        #self.player1 = Player(self, 5, 5)
-        #self.player2 = Player(self, 10, 10)
-        #self.networkPlayers = [Player]
-        #self.networkPlayers.append(self.player1); self.networkPlayers.append(self.player2)
-
-
-        # for x in range(5, 15):
-        #     Wall(self, x, 15)
 
     def update(self):
         self.sprites.update()
@@ -111,12 +132,36 @@ class Game:
 
     def render(self):
         self.window.fill(BGCOLOR)
-        self.drawGrid()
         #self.sprites.draw(self.window)
+        #pygame.draw.rect(self.window, WHITE, self.player.rect, 2)
+
+        #self.window.blit(self.mapSurface, self.camera.applyRect(self.mapRect))
+
+        # for wall in self.walls:
+        #     self.window.blit(wall.image, self.camera.applyRect(wall.rect))
+        #
+        # for player in self.players:
+        #     self.window.blit(player.image, self.camera.applyRect(player.mesh))
 
         for sprite in self.sprites:
-            self.window.blit(sprite.image, self.camera.apply(sprite))
+            self.window.blit(sprite.image, sprite)
 
+        # for player in self.players:
+        #     player.update()
+        #     player.rotateMouse()
+        #
+        #     self.window.blit(player.image, self.camera.apply(player))
+        # for player in self.players:
+        #     center = player.mesh.center
+        #     player.rotateMouse()
+        #     img = pygame.transform.rotate(player.image, player.rotation)
+        #     player.mesh = player.image.get_rect(center=center)
+        #     self.window.blit(player.image, self.camera.apply(player))
+        pygame.draw.rect(self.window, ORANGE, self.player.mesh, 2)
+        # pygame.draw.rect(self.window, RED, self.player.rect)
+
+
+        #self.drawGrid()
         # for i in self.networkPlayers:
         #     i.update()
         #     i.draw()
