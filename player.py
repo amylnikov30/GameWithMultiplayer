@@ -21,6 +21,7 @@ class Player(pygame.sprite.Sprite):
         # self.vely = 0
         self.vel = vector(0, 0)
         self.pos = vector(x, y) * TILESIZE
+        self.renderPos = vector(x, y) * TILESIZE
         self.mesh = PLAYER_MESH
         self.mesh.center = self.rect.center
         # self.x = x * TILESIZE
@@ -139,7 +140,7 @@ class Player(pygame.sprite.Sprite):
     def rotateMouse(self):
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        rel_x, rel_y = mouse_x - self.pos.x, mouse_y - self.pos.y
+        rel_x, rel_y = mouse_x - WIDTH/2, mouse_y - HEIGHT/2
         angle = math.degrees(-math.atan2(rel_y, rel_x))
 
         self.rotation = angle
@@ -159,10 +160,13 @@ class Player(pygame.sprite.Sprite):
         #self.mesh = self.image.get_rect(center=center)
         self.rect.center = self.pos
         self.pos += self.vel * self.game.fps / 1000
+        self.renderPos.x = self.pos.x
         self.mesh.centerx = self.pos.x
         self.wallCollision('x')
+        self.renderPos.y = self.pos.y
         self.mesh.centery = self.pos.y
         self.wallCollision('y')
         self.rect.center = self.mesh.center
+        #self.pos = self.mesh.center
 
         #self.game.window.blit(self.image, self.game.camera.apply(self)

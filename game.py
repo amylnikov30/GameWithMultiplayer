@@ -40,7 +40,7 @@ class Game:
         models = os.path.join(img, 'models')
         masks = os.path.join(models, 'masks')
 
-        self.playerMask = pygame.image.load(os.path.join(masks, 'charlie32.png')).convert_alpha()
+        self.playerMask = pygame.image.load(os.path.join(masks, 'manBlue_gun.png')).convert_alpha()
 
         self.map = Map('shipment')
         #self.mapSurface = self.map.makeMap()
@@ -132,39 +132,35 @@ class Game:
 
     def render(self):
         self.window.fill(BGCOLOR)
-        #self.sprites.draw(self.window)
-        #pygame.draw.rect(self.window, WHITE, self.player.rect, 2)
 
-        #self.window.blit(self.mapSurface, self.camera.applyRect(self.mapRect))
-
-        # for wall in self.walls:
-        #     self.window.blit(wall.image, self.camera.applyRect(wall.rect))
-        #
-        # for player in self.players:
-        #     self.window.blit(player.image, self.camera.applyRect(player.mesh))
 
         for sprite in self.sprites:
-            self.window.blit(sprite.image, sprite)
+            #self.camera.apply(sprite)
+            self.window.blit(sprite.image, self.camera.apply(sprite))
+            #pygame.draw.rect(self.window, RED, sprite, 2)
 
-        # for player in self.players:
-        #     player.update()
-        #     player.rotateMouse()
         #
-        #     self.window.blit(player.image, self.camera.apply(player))
         # for player in self.players:
-        #     center = player.mesh.center
-        #     player.rotateMouse()
-        #     img = pygame.transform.rotate(player.image, player.rotation)
-        #     player.mesh = player.image.get_rect(center=center)
+        #     #self.camera.apply(player)
         #     self.window.blit(player.image, self.camera.apply(player))
-        pygame.draw.rect(self.window, ORANGE, self.player.mesh, 2)
-        # pygame.draw.rect(self.window, RED, self.player.rect)
+        #     pygame.draw.rect(self.window, DARKBLUE, player.mesh)
 
+
+        #self.player.rect = self.camera.applyRect(self.player.rect)
+        # self.window.blit(self.player.image, self.player.rect)
+        # pygame.draw.rect(self.window, YELLOW, self.player.rect)
+        # pygame.draw.rect(self.window, RED, self.player.mesh, 2)
+
+
+        # for player in self.players:
+        #     self.window.blit(player.image, player)
+
+
+        pygame.draw.rect(self.window, RED, self.camera.applyRect(self.player.mesh), 1)
 
         #self.drawGrid()
-        # for i in self.networkPlayers:
-        #     i.update()
-        #     i.draw()
+
+
         self.displayFps()
         pygame.display.update()
 

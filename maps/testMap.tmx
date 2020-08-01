@@ -6,9 +6,12 @@
  <tileset firstgid="2" name="rug" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="../resource/img/textures/Floors/rug.png" width="32" height="32"/>
  </tileset>
+ <tileset firstgid="3" name="Floor3" tilewidth="16" tileheight="16" tilecount="77" columns="7">
+  <image source="../resource/img/textures/Spire Sheets/Texture Spirtes/Floor3.png" width="113" height="178"/>
+ </tileset>
  <layer id="1" name="ground" width="50" height="50">
   <data encoding="base64" compression="zstd">
-   KLUv/WAQJmUAACACAAAAAQAJZ94RAQ==
+   KLUv/WAQJmUAACADAAAAAQAJZ94RAQ==
   </data>
  </layer>
  <objectgroup id="2" name="walls">

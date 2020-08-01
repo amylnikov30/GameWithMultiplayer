@@ -96,12 +96,28 @@ class Camera:
 
 
     def apply(self, entity):
-        return entity.rect.move(self.camera.center)
+
+        return entity.rect.move(self.camera.topleft)
+
+
+    def applyRotation(self, entity):
+        center = entity.rect.center
+        image = pygame.transform.rotate(entity.game.window, entity.rotation)
+        entity.rect = image.get_rect(center=center)
+
+        return image
+
+
+    def applySprite(self, sprite):
+        center = sprite.rect.center
+        rect = sprite.image.get_rect(center=self.camera.center)
+
+        return rect
 
     def applyRect(self, entity):
         return entity.move(self.camera.topleft)
 
     def update(self, target):
-        x = -target.rect.centerx + int(WIDTH/2)
-        y = -target.rect.centery + int(HEIGHT/2)
+        x = -target.pos.x + (WIDTH/2)
+        y = -target.pos.y + (HEIGHT/2)
         self.camera = pygame.Rect(x, y, self.width, self.height)
