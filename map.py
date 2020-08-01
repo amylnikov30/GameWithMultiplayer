@@ -29,7 +29,7 @@ class Map:
 class TiledMap:
 
     def __init__(self, filename):
-        tmx = pytmx.load_pygame(f'maps\{filename}.tmx', pixelalpha=True)
+        tmx = pytmx.load_pygame(os.path.join('maps', f'{filename}.tmx'), pixelalpha=True)
         self.width = tmx.width * tmx.tilewidth
         self.height = tmx.height * tmx.tileheight
         self.tmx = tmx
@@ -60,6 +60,7 @@ class Wall(pygame.sprite.Sprite):
         self.groups = game.sprites, game.walls
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        #self.image = self.game.mapImage
         self.image = pygame.Surface((TILESIZE, TILESIZE))
         self.image.fill(DARKORANGE)
         self.rect = self.image.get_rect()
@@ -72,18 +73,33 @@ class Wall(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
 
     def __init__(self, game, x, y, width, height):
-        self.groups = game.walls
+        self.groups = game.walls, game.sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.width = width
         self.height = height
-        #self.image = pygame.Surface((TILESIZE, TILESIZE))
+        self.image = pygame.Surface((self.width, self.height))
         self.image.fill(DARKORANGE)
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.x = x
         self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
+        self.rect.x = x
+        self.rect.y = y
+
+# class QuadObstacle(pygame.sprite.Sprite):
+#     def __init__(self, game, points: ((topleft), (topright), (bottomleft), (bottomright))):
+#         self.groups = game.walls, game.sprites
+#         pygame.sprite.Sprite.__init__(self, self.groups)
+#         self.game = game
+#         self.points = points
+#         self.topleft = self.points.topleft
+#         self.topright = self.points.topright
+#         self.bottomleft = self.points.bottomleft
+#         self.bottomright = self.points.bottomright
+#
+#
+#     def draw(self):
+#         pygame.draw.polygon(self.game.window, DARKORANGE, self.points)
 
 
 
@@ -118,6 +134,6 @@ class Camera:
         return entity.move(self.camera.topleft)
 
     def update(self, target):
-        x = -target.pos.x + (WIDTH/2)
-        y = -target.pos.y + (HEIGHT/2)
+        x = -target.rect.centerx + (WIDTH/2)
+        y = -target.rect.centery + (HEIGHT/2)
         self.camera = pygame.Rect(x, y, self.width, self.height)

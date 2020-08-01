@@ -17,13 +17,13 @@ DARKBLUE = (0, 34, 64)
 
 
 # game settings
-WIDTH = 1024     # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 786  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 1024    # 16 * 64 or 32 * 32 or 64 * 16
+HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 300
 TITLE = "Hotline Miami 2020 Rework Pre-alpha testing"
 BGCOLOR = DARKGREY
 
-TILESIZE = 32
+TILESIZE = 16
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 

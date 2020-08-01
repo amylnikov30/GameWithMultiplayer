@@ -8,11 +8,11 @@ W                                               W
 W           WWWWWWWWWW     WWWWWWWWWW           W
 W           WWWWWWWWWW     WWWWWWWWWW           W
 W           WWWWWWWWWW     WWWWWWWWWW           W
-WWWWWWW     WWWWWWWWWW     WWWWWWWWWW     WWWWWWW
-WWWWWWW                                   WWWWWWW
-WWWWWWW                 P                 WWWWWWW
-WWWWWWW                                   WWWWWWW
-WWWWWWW     WWWWWWWWWW     WWWWWWWWWW     WWWWWWW
+WWWWWWW     WWWWWWWWWW     WWWWWWWWWW     WWWWW W
+W WWWWW                                   WWWWW W
+W WWWWW                 P                 WWWWW W
+W WWWWW                                   WWWWW W
+W WWWWW     WWWWWWWWWW     WWWWWWWWWW     WWWWWWW
 W           WWWWWWWWWW     WWWWWWWWWW           W
 W           WWWWWWWWWW     WWWWWWWWWW           W
 W           WWWWWWWWWW     WWWWWWWWWW           W

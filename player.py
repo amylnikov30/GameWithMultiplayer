@@ -20,8 +20,8 @@ class Player(pygame.sprite.Sprite):
         # self.velx = 0
         # self.vely = 0
         self.vel = vector(0, 0)
-        self.pos = vector(x, y) * TILESIZE
-        self.renderPos = vector(x, y) * TILESIZE
+        self.pos = vector(x, y)
+        self.renderPos = vector(x, y)
         self.mesh = PLAYER_MESH
         self.mesh.center = self.rect.center
         # self.x = x * TILESIZE
