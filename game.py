@@ -6,12 +6,14 @@ from settings import *
 from player import Player
 from map import *
 from network import Network
+from bot import Bot
 
 class Game:
 
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
+        setMode()
+        self.window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
         pygame.display.set_caption("Hotline Miami 2020 Rework")
         self.clock = pygame.time.Clock()
         #self.id = id
@@ -19,6 +21,7 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
+        self.renderClipBrushesFlag = False
 
 
         self.loadData()
@@ -42,7 +45,7 @@ class Game:
 
         pygame.mouse.set_visible(False)
 
-        self.map = TiledMap('gulag')
+        self.map = TiledMap('shipment')
 
         self.mapSurface = self.map.makeMap()
         self.mapRect = self.mapSurface.get_rect()
@@ -52,12 +55,15 @@ class Game:
         textures = os.path.join(img, 'textures')
         doors = os.path.join(textures, 'doors')
         cursors = os.path.join(img, 'cursors')
+        weapons = os.path.join(models, 'weapons')
 
-        self.playerMask = pygame.image.load(os.path.join(masks, 'charlie32.png')).convert_alpha()
+        self.playerMask = pygame.image.load(os.path.join(masks, 'charlie.png')).convert_alpha()
+        pygame.transform.scale(self.playerMask, (64, 64))
         self.mapImage = pygame.image.load(os.path.join(doors, 'door16.png')).convert_alpha()
         self.crosshair = pygame.image.load(os.path.join(cursors, 'crosshair.png')).convert_alpha()
-
-
+        self.bulletImage = pygame.image.load(os.path.join(weapons, 'bullet.png')).convert_alpha()
+        self.botImage = pygame.image.load(os.path.join(masks, 'manBlue_gun.png'))
+        #
 
 
 
@@ -73,6 +79,8 @@ class Game:
             if tileObject.name == "playerSpawn":
                 self.player = Player(self, tileObject.x, tileObject.y)
             self.camera = Camera(self.map.width, self.map.height)
+            if tileObject.name == "botSpawn":
+                Bot(self, (tileObject.x, tileObject.y))
             if tileObject.name == "wall":
                 Obstacle(self, tileObject.x, tileObject.y, tileObject.width, tileObject.height)
 
@@ -83,6 +91,12 @@ class Game:
                     Wall(self, col, row)
                 if tile == 'P':
                     self.player = Player(self, col, row)
+
+    def renderClipBrushes(self):
+        for wall in self.walls:
+            self.window.blit(wall.image, self.camera.apply(wall))
+
+        pygame.draw.rect(self.playerMask, RED, self.camera.applyRect(self.player.mesh), 1)
 
 
     def renderCursor(self):
@@ -109,6 +123,8 @@ class Game:
         self.sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
+        self.bots = pygame.sprite.Group()
 
         #self.player = Player(self, 5, 5)
 
@@ -119,6 +135,10 @@ class Game:
     def update(self):
         self.sprites.update()
         self.camera.update(self.player)
+
+        botHits = pygame.sprite.groupcollide(self.bots, self.bullets, False, True)
+        for hit in botHits:
+            hit.health -= BULLET_DAMAGE
 
 
     def network(self):
@@ -157,8 +177,12 @@ class Game:
         for sprite in self.sprites:
             #self.camera.apply(sprite)
             self.window.blit(sprite.image, self.camera.apply(sprite))
-            #pygame.draw.rect(self.window, RED, sprite, 2)
 
+        if self.renderClipBrushesFlag:
+            self.renderClipBrushes()
+            #pygame.draw.rect(self.window, RED, sprite, 2)
+        for bot in self.bots:
+            pygame.draw.rect(self.window, RED, self.camera.applyRect(bot.mesh), 2)
         #
         # for player in self.players:
         #     #self.camera.apply(player)
@@ -174,9 +198,6 @@ class Game:
 
         # for player in self.players:
         #     self.window.blit(player.image, player)
-
-
-        pygame.draw.rect(self.window, RED, self.camera.applyRect(self.player.mesh), 1)
 
         #self.drawGrid()
 
@@ -238,6 +259,8 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.quit()
+                if event.key == pygame.K_h:
+                    self.renderClipBrushesFlag = not self.renderClipBrushesFlag
             #     if event.key == pygame.K_a:
             #         self.player.move(dx=-1)
             #         #return -1

@@ -12,18 +12,19 @@ ORANGE = (255, 165, 0)
 DARKORANGE = (255, 140, 0)
 DARKBLUE = (0, 34, 64)
 
-
-#winfo = pygame.display.Info()
-
+def setMode():
+    winfo = pygame.display.Info()
+    WIDTH = winfo.current_w
+    HEIGHT = winfo.current_h
 
 # game settings
-WIDTH = 1024    # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 1920    # 16 * 64 or 32 * 32 or 64 * 16
+HEIGHT = 1080  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 300
 TITLE = "Hotline Miami 2020 Rework Pre-alpha testing"
 BGCOLOR = DARKGREY
 
-TILESIZE = 16
+TILESIZE = 40
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
@@ -31,8 +32,14 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 PLAYER_SPEED = 800
 WALKING_SPEED = 400
 DUCKING_SPEED = 200
+PLAYER_MESH = pygame.Rect(0, 0, TILESIZE, TILESIZE)
 
-PLAYER_MESH = pygame.Rect(0, 0, 32, 32)
+#Weapon settings
+BULLET_VEL = 2000
+BULLET_TRAVEL_TIME = 4000   #time in milliseconds
+FIRERATE = 100              #place holder until other weapons are implemented
+BULLET_DAMAGE = 34         #place holder until other weapons are implemented
+
 FULLSCREEN = pygame.FULLSCREEN
 
 DELTA_T = FPS / 1000

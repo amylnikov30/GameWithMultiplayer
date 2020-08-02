@@ -3,8 +3,10 @@ import pygame
 
 from settings import *
 from gameObject import GameObject
+from weapons import Bullet
 import math
 from map import meshCollision
+import time
 
 vector = pygame.math.Vector2
 
@@ -27,9 +29,25 @@ class Player(pygame.sprite.Sprite):
         # self.x = x * TILESIZE
         # self.y = y * TILESIZE
         self.rotation = 0
+        self.lastShot = 0
+        self.health = 100
 
     def collideRect(self, first, second):
         first.rect.collide_rect(second.rect)
+
+
+    def slide(self):
+        start = pygame.time.get_ticks()
+        startVel = self.vel
+
+        self.vel.x = 900
+        self.vel = self.vel.rotate(-self.rotation)
+        time.sleep(1)
+
+
+
+        self.vel = startVel
+
 
 
 
@@ -37,46 +55,74 @@ class Player(pygame.sprite.Sprite):
         self.vel = vector(0, 0)
         keys = pygame.key.get_pressed()
 
+        # for event in pygame.event.get():
+        #     if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
+        #         now = pygame.time.get_ticks()
+        #         if now - self.lastShot > FIRERATE:
+        #             self.lastShot = now
+        #             direction = vector(1, 0).rotate(-self.rotation)
+        #             Bullet(self.game, self.pos, direction, self)
+        #             #print("[PLAYER] Bullet fired")
+
+        mouse = pygame.mouse.get_pressed()
+
+        if mouse[0] == True:
+            now = pygame.time.get_ticks()
+            if now - self.lastShot > FIRERATE:
+                self.lastShot = now
+                direction = vector(1, 0).rotate(-self.rotation)
+                Bullet(self.game, self.pos, direction, self)
+                #print("[PLAYER] Bullet fired")
+
         if keys[pygame.K_w]:
             self.vel.y = -PLAYER_SPEED
-            self.rotation = 90
+            #self.rotation = 90
         if keys[pygame.K_a]:
             self.vel.x = -PLAYER_SPEED
-            self.rotation = 180
+            #self.rotation = 180
         if keys[pygame.K_s]:
             self.vel.y = PLAYER_SPEED
-            self.rotation = 270
+            #self.rotation = 270
         if keys[pygame.K_d]:
             self.vel.x = PLAYER_SPEED
-            self.rotation = 0
+            #self.rotation = 0
+        if keys[pygame.K_c]:
+            pass
+        if keys[pygame.K_SPACE]:
+            now = pygame.time.get_ticks()
+            if now - self.lastShot > FIRERATE:
+                self.lastShot = now
+                direction = vector(1, 0).rotate(-self.rotation)
+                Bullet(self.game, self.pos, direction, self)
+                #print("[PLAYER] Bullet fired")
 
         if keys[pygame.K_LSHIFT]:
             if keys[pygame.K_w]:
                 self.vel.y = -WALKING_SPEED
-                self.rotation = 90
+                #self.rotation = 90
             if keys[pygame.K_a]:
                 self.vel.x = -WALKING_SPEED
-                self.rotation = 180
+                #self.rotation = 180
             if keys[pygame.K_s]:
                 self.vel.y = WALKING_SPEED
-                self.rotation = 270
+                #self.rotation = 270
             if keys[pygame.K_d]:
                 self.vel.x = WALKING_SPEED
-                self.rotation = 0
+                #self.rotation = 0
 
         if keys[pygame.K_LCTRL]:
             if keys[pygame.K_w]:
                 self.vel.y = -DUCKING_SPEED
-                self.rotation = 90
+                #self.rotation = 90
             if keys[pygame.K_a]:
                 self.vel.x = -DUCKING_SPEED
-                self.rotation = 180
+                #self.rotation = 180
             if keys[pygame.K_s]:
                 self.vel.y = DUCKING_SPEED
-                self.rotation = 270
+                #self.rotation = 270
             if keys[pygame.K_d]:
                 self.vel.x = DUCKING_SPEED
-                self.rotation = 0
+                #self.rotation = 0
 
 
         if self.vel.x != 0 and self.vel.y != 0:
@@ -155,7 +201,7 @@ class Player(pygame.sprite.Sprite):
         center = self.rect.center
         self.getKeys()
         self.rotateMouse()
-        self.image = pygame.transform.rotate(self.game.playerMask, self.rotation)
+        self.image = pygame.transform.rotate(pygame.transform.scale(self.game.playerMask, (TILESIZE, TILESIZE)), self.rotation)
         self.rect = self.image.get_rect(center=center)
         #self.mesh = self.image.get_rect(center=center)
         self.rect.center = self.pos
@@ -167,6 +213,8 @@ class Player(pygame.sprite.Sprite):
         self.mesh.centery = self.pos.y
         self.wallCollision('y')
         self.rect.center = self.mesh.center
+        if self.health < 0:
+            self.kill()
         #self.pos = self.mesh.center
 
         #self.game.window.blit(self.image, self.game.camera.apply(self)

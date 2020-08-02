@@ -29,7 +29,8 @@ class Map:
 class TiledMap:
 
     def __init__(self, filename):
-        tmx = pytmx.load_pygame(os.path.join('maps', f'{filename}.tmx'), pixelalpha=True)
+        mapFolder = os.path.join(os.path.dirname(__file__), 'maps')
+        tmx = pytmx.load_pygame(os.path.join(mapFolder, f'{filename}.tmx'), pixelalpha=True)
         self.width = tmx.width * tmx.tilewidth
         self.height = tmx.height * tmx.tileheight
         self.tmx = tmx
@@ -73,7 +74,7 @@ class Wall(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
 
     def __init__(self, game, x, y, width, height):
-        self.groups = game.walls, game.sprites
+        self.groups = game.walls
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.width = width
