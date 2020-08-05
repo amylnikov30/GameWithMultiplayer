@@ -70,6 +70,13 @@ class Wall(pygame.sprite.Sprite):
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
 
+class Window(pygame.sprite.Sprite):
+
+    def __init__(self, game, x, y):
+        self.groups = game.sprites, game.windows
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+
 
 class Obstacle(pygame.sprite.Sprite):
 

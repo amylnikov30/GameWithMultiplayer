@@ -17,7 +17,7 @@ class Bot(pygame.sprite.Sprite):
         self.health = 100
         self.image = self.game.botImage
         self.rect = self.image.get_rect()
-        self.mesh = PLAYER_MESH
+        self.mesh = BOT_MESH.copy()
         self.mesh.center = self.rect.center
         self.rect.center = self.pos
         self.vel = vector(0, 0)
@@ -51,16 +51,16 @@ class Bot(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.game.botImage, self.rotation)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        # self.accel = vector(PLAYER_SPEED, 0).rotate(-self.rotation)
-        # self.accel += self.vel * -1
-        # self.vel += self.accel * self.game.fps / 1000
-        # self.pos += self.vel * (self.game.fps / 1000) + 0.5 * self.accel * (self.game.fps / 1000) ** 2
-        # self.mesh.centerx = self.pos.x
-        # self.wallCollision(self.game.walls, 'x')
-        # self.wallCollision(self.game.players, 'x')
+        self.accel = vector(PLAYER_SPEED, 0).rotate(-self.rotation)
+        self.accel += self.vel * -1
+        self.vel += self.accel * self.game.fps / 1000
+        self.pos += self.vel * (self.game.fps / 1000) + 0.5 * self.accel * (self.game.fps / 1000) ** 2
+        self.mesh.centerx = self.pos.x
+        self.wallCollision(self.game.walls, 'x')
+        #self.wallCollision(self.game.players, 'x')
         self.mesh.centery = self.pos.y
-        # self.wallCollision(self.game.walls, 'y')
-        # self.wallCollision(self.game.players, 'y')
+        self.wallCollision(self.game.walls, 'y')
+        #self.wallCollision(self.game.players, 'y')
         self.rect.center = self.mesh.center
         if self.health <= 0:
             self.kill()

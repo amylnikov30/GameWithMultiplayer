@@ -50,6 +50,9 @@ class Player(pygame.sprite.Sprite):
 
 
 
+    def walkingAnim(self):
+        walkingImage = pygame.image.load(os.path.join(MASKS, 'jacketWalking.png'))
+        
 
     def getKeys(self):
         self.vel = vector(0, 0)

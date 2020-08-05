@@ -7,6 +7,7 @@ from player import Player
 from map import *
 from network import Network
 from bot import Bot
+from weapons import *
 
 class Game:
 
@@ -58,11 +59,15 @@ class Game:
         weapons = os.path.join(models, 'weapons')
 
         self.playerMask = pygame.image.load(os.path.join(masks, 'charlie.png')).convert_alpha()
-        pygame.transform.scale(self.playerMask, (64, 64))
+        pygame.transform.scale(self.playerMask, (TILESIZE, TILESIZE))
         self.mapImage = pygame.image.load(os.path.join(doors, 'door16.png')).convert_alpha()
         self.crosshair = pygame.image.load(os.path.join(cursors, 'crosshair.png')).convert_alpha()
         self.bulletImage = pygame.image.load(os.path.join(weapons, 'bullet.png')).convert_alpha()
         self.botImage = pygame.image.load(os.path.join(masks, 'manBlue_gun.png'))
+        #self.weapon_m4a1 = pygame.image.load(os.path.join(weapons, 'm4a1.png'))
+        self.weaponModels = {}
+        for modelname in RIFLES:
+            self.weaponModels[modelname] = pygame.image.load(os.path.join(weapons, RIFLES[modelname])).convert_alpha()
         #
 
 
@@ -76,13 +81,16 @@ class Game:
         #             self.player = Player(self, col, row)
 
         for tileObject in self.map.tmx.objects:
+            center = vector(tileObject.x + tileObject.width / 2, tileObject.y + tileObject.height / 2)
             if tileObject.name == "playerSpawn":
-                self.player = Player(self, tileObject.x, tileObject.y)
+                self.player = Player(self, center.x, center.y)
             self.camera = Camera(self.map.width, self.map.height)
             if tileObject.name == "botSpawn":
-                Bot(self, (tileObject.x, tileObject.y))
+                Bot(self, center)
             if tileObject.name == "wall":
                 Obstacle(self, tileObject.x, tileObject.y, tileObject.width, tileObject.height)
+            if tileObject.type == "item":
+                Item(self, tileObject.name, center)
 
     def loadMapLegacy(self):
         for row, tiles in enumerate(self.map.data):
@@ -125,6 +133,9 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.bots = pygame.sprite.Group()
+        self.windows = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
+        self.weapons = pygame.sprite.Group()
 
         #self.player = Player(self, 5, 5)
 
@@ -188,6 +199,9 @@ class Game:
         #     #self.camera.apply(player)
         #     self.window.blit(player.image, self.camera.apply(player))
         #     pygame.draw.rect(self.window, DARKBLUE, player.mesh)
+
+        self.renderText(pygame.font.SysFont('Courier', 25), f"Bots remainaining: {len(self.bots)}", "white", (45, 45))
+        self.renderText(pygame.font.SysFont('Courier', 25), f"Health: {self.player.health}", "white", (30, 1050))
 
 
         #self.player.rect = self.camera.applyRect(self.player.rect)
