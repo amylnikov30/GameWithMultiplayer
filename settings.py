@@ -1,5 +1,5 @@
 import pygame
-
+import os
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -21,7 +21,7 @@ def setMode():
 WIDTH = 1920    # 16 * 64 or 32 * 32 or 64 * 16
 HEIGHT = 1080  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 300
-TITLE = "Hotline Miami 2020 Rework Pre-alpha testing"
+TITLE = "Hotline Shadow Development Build 8.21.2020"
 BGCOLOR = DARKGREY
 
 TILESIZE = 32
@@ -32,17 +32,20 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 PLAYER_SPEED = 800
 WALKING_SPEED = 400
 DUCKING_SPEED = 200
+SLIDING_VEL = 10
 PLAYER_MESH = pygame.Rect(0, 0, TILESIZE, TILESIZE)
 
 BOT_MESH = pygame.Rect(0, 0, TILESIZE, TILESIZE)
 
 #Weapon settings
 BULLET_VEL = 4000
-BULLET_TRAVEL_TIME = 4000   #time in milliseconds
-FIRERATE = 100              #place holder until other weapons are implemented
+BULLET_TRAVEL_TIME = 4000  #time in milliseconds
+FIRERATE = 100             #place holder until other weapons are implemented
 BULLET_DAMAGE = 34         #place holder until other weapons are implemented
 
 FULLSCREEN = pygame.FULLSCREEN
+
+THROWING_VEL = 100
 
 DELTA_T = FPS / 1000
 
@@ -59,6 +62,8 @@ BOMB_MODELS = {'weapon_c4':'c4.png'}
 
 ITEM_MODELS = {'weapons':WEAPON_MODELS, 'bomb':BOMB_MODELS}
 
+PICKUP_RAD = 32
+
 
 
 #graphics
@@ -67,9 +72,11 @@ PARTICLES = []
 TEXTURES = []
 MODELS = []
 
-MODELS = os.path.join(img, 'models')
-MASKS = os.path.join(models, 'masks')
-TEXTURES = os.path.join(img, 'textures')
-DOORS = os.path.join(textures, 'doors')
-CURSORS = os.path.join(img, 'cursors')
-WEAPONS = os.path.join(models, 'weapons')
+ROOT = os.path.dirname(__file__)
+IMG = os.path.join(ROOT, 'img')
+MODELS = os.path.join(IMG, 'models')
+MASKS = os.path.join(MODELS, 'masks')
+TEXTURES = os.path.join(IMG, 'textures')
+DOORS = os.path.join(TEXTURES, 'doors')
+CURSORS = os.path.join(IMG, 'cursors')
+WEAPONS = os.path.join(MODELS, 'weapons')

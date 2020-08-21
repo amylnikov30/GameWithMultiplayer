@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.groups = game.sprites, game.players
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
+        self.name = "TestPlayer"
         self.image = self.game.playerMask
         #self.image.fill(DARKBLUE)
         self.rect = self.image.get_rect(center=(x, y))
@@ -31,32 +32,49 @@ class Player(pygame.sprite.Sprite):
         self.rotation = 0
         self.lastShot = 0
         self.health = 100
+        self.items = []
+        self.currentItem = None
+        self.lastItemDropped = 0
 
     def collideRect(self, first, second):
         first.rect.collide_rect(second.rect)
 
 
     def slide(self):
-        start = pygame.time.get_ticks()
-        startVel = self.vel
+        direction = vector(1, 0).rotate(-self.rotation)
+        vel = direction * SLIDING_VEL
 
-        self.vel.x = 900
-        self.vel = self.vel.rotate(-self.rotation)
-        time.sleep(1)
+        self.pos += vel
 
-
-
-        self.vel = startVel
+        self.wallCollision('x')
+        self.wallCollision('y')
 
 
+    def pickupItems(self):
+        for item in self.game.items:
+            distance = self.pos - item.pos
+            now = pygame.time.get_ticks()
+            if distance.length() <= item.pickupRad and self.currentItem == None and now - self.lastItemDropped > 700:
+                item.pickup(self)
+
+
+    def throwItems(self):
+        self.lastItemDropped = pygame.time.get_ticks()
+        if self.currentItem != None:
+            self.currentItem.throw()
+
+
+    def getPos(self):
+        return self.pos
 
     def walkingAnim(self):
         walkingImage = pygame.image.load(os.path.join(MASKS, 'jacketWalking.png'))
-        
+
 
     def getKeys(self):
         self.vel = vector(0, 0)
         keys = pygame.key.get_pressed()
+
 
         # for event in pygame.event.get():
         #     if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
@@ -69,14 +87,29 @@ class Player(pygame.sprite.Sprite):
 
         mouse = pygame.mouse.get_pressed()
 
-        if mouse[0] == True:
-            now = pygame.time.get_ticks()
-            if now - self.lastShot > FIRERATE:
-                self.lastShot = now
-                direction = vector(1, 0).rotate(-self.rotation)
-                Bullet(self.game, self.pos, direction, self)
+        if mouse[0]: #left-click
+            if self.currentItem != None:
+                now = pygame.time.get_ticks()
+                if now - self.lastShot > self.currentItem.firerate and self.currentItem.ammo[0] > 0 and now - self.currentItem.lastReload > self.currentItem.reloadTime:
+                    self.lastShot = now
+                    direction = vector(1, 0).rotate(-self.rotation)
+                    Bullet(self.game, self.pos, direction, self)
+                    self.currentItem.ammo[0] -= 1
+                    #pygame.time.wait(self.currentItem.firerate)
+        if mouse[2]: #right-click
+            if self.currentItem != None:
+                self.currentItem.throw()
                 #print("[PLAYER] Bullet fired")
-
+        # for event in pygame.event.get():
+        #     if event.type == pygame.KEYDOWN:# and event.type == pygame.KEYUP:
+        #         if event.key == pygame.K_e:
+        #             for item in self.game.items:
+        #                 distance = self.pos - item.pos
+        #                 if distance.length() <= item.pickupRad and self.currentItem == None:
+        #                     item.pickup(self)
+        #                 else:
+        #                     item.drop()
+        #                     self.currentItem = None
         if keys[pygame.K_w]:
             self.vel.y = -PLAYER_SPEED
             #self.rotation = 90
@@ -89,8 +122,11 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_d]:
             self.vel.x = PLAYER_SPEED
             #self.rotation = 0
+        if keys[pygame.K_r]:
+            if self.currentItem != None:
+                self.currentItem.reload()
         if keys[pygame.K_c]:
-            pass
+            pass #self.slide()
         if keys[pygame.K_SPACE]:
             now = pygame.time.get_ticks()
             if now - self.lastShot > FIRERATE:
@@ -158,26 +194,6 @@ class Player(pygame.sprite.Sprite):
                 self.vel.y = 0
                 self.mesh.centery = self.pos.y
 
-    def wallCollision2(self, group, direction):
-        if direction == 'x':
-            hits = pygame.self.selfcollide(self, group, False, collide_rect)
-            if hits:
-                if hits[0].rect.centerx > self.rect.centerx:
-                    self.x = hits[0].rect.left - self.rect.width / 2
-                if hits[0].rect.centerx < self.rect.centerx:
-                    self.x = hits[0].rect.right + self.rect.width / 2
-                self.velx = 0
-                self.rect.centerx = self.pos.x
-        if direction == 'y':
-            hits = pygame.self.selfcollide(self, group, False, collide_rect)
-            if hits:
-                if hits[0].rect.centery > self.rect.centery:
-                    self.pos.y = hits[0].rect.top - self.rect.height / 2
-                if hits[0].rect.centery < self.rect.centery:
-                    self.pos.y = hits[0].rect.bottom + self.rect.height / 2
-                self.vel.y = 0
-                self.rect.centery = self.pos.y
-
     def rotate(self):
         if self.rotation == 90 or self.rotation == 270:
             self.image = pygame.Surface((40, 30))
@@ -203,6 +219,7 @@ class Player(pygame.sprite.Sprite):
         #self.rect = self.image.get_rect()
         center = self.rect.center
         self.getKeys()
+        self.pickupItems()
         self.rotateMouse()
         self.image = pygame.transform.rotate(pygame.transform.scale(self.game.playerMask, (TILESIZE, TILESIZE)), self.rotation)
         self.rect = self.image.get_rect(center=center)

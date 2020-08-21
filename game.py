@@ -15,7 +15,7 @@ class Game:
         pygame.init()
         setMode()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-        pygame.display.set_caption("Hotline Miami 2020 Rework")
+        pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         #self.id = id
         self.ready = False
@@ -59,11 +59,11 @@ class Game:
         weapons = os.path.join(models, 'weapons')
 
         self.playerMask = pygame.image.load(os.path.join(masks, 'charlie.png')).convert_alpha()
-        pygame.transform.scale(self.playerMask, (TILESIZE, TILESIZE))
+        #pygame.transform.scale(self.playerMask, (TILESIZE, TILESIZE))
         self.mapImage = pygame.image.load(os.path.join(doors, 'door16.png')).convert_alpha()
         self.crosshair = pygame.image.load(os.path.join(cursors, 'crosshair.png')).convert_alpha()
         self.bulletImage = pygame.image.load(os.path.join(weapons, 'bullet.png')).convert_alpha()
-        self.botImage = pygame.image.load(os.path.join(masks, 'manBlue_gun.png'))
+        self.botImage = pygame.image.load(os.path.join(masks, 'manBlue_gun.png')).convert_alpha()
         #self.weapon_m4a1 = pygame.image.load(os.path.join(weapons, 'm4a1.png'))
         self.weaponModels = {}
         for modelname in RIFLES:
@@ -79,12 +79,11 @@ class Game:
         #             Wall(self, col, row)
         #         if tile == 'P':
         #             self.player = Player(self, col, row)
-
         for tileObject in self.map.tmx.objects:
             center = vector(tileObject.x + tileObject.width / 2, tileObject.y + tileObject.height / 2)
             if tileObject.name == "playerSpawn":
                 self.player = Player(self, center.x, center.y)
-            self.camera = Camera(self.map.width, self.map.height)
+                self.camera = Camera(self.map.width, self.map.height)
             if tileObject.name == "botSpawn":
                 Bot(self, center)
             if tileObject.name == "wall":
@@ -121,7 +120,7 @@ class Game:
 
     def displayFps(self):
         self.renderText(
-            pygame.font.SysFont("Courier", 25),
+            pygame.font.SysFont("Modern Warfare", 30),
             what=str(int(self.clock.get_fps())),
             color="white",
             where=(15, 15))
@@ -145,6 +144,7 @@ class Game:
 
     def update(self):
         self.sprites.update()
+        self.items.update()
         self.camera.update(self.player)
 
         botHits = pygame.sprite.groupcollide(self.bots, self.bullets, False, True)
@@ -187,7 +187,15 @@ class Game:
 
         for sprite in self.sprites:
             #self.camera.apply(sprite)
-            self.window.blit(sprite.image, self.camera.apply(sprite))
+            if not isinstance(sprite, Item):
+                self.window.blit(sprite.image, self.camera.apply(sprite))
+
+        # for player in self.players:
+        #     self.window.blit(player.image, self.camera.apply(player))
+
+        for item in self.items:
+            if item.render:
+                self.window.blit(item.image, self.camera.apply(item))
 
         if self.renderClipBrushesFlag:
             self.renderClipBrushes()
@@ -200,8 +208,18 @@ class Game:
         #     self.window.blit(player.image, self.camera.apply(player))
         #     pygame.draw.rect(self.window, DARKBLUE, player.mesh)
 
-        self.renderText(pygame.font.SysFont('Courier', 25), f"Bots remainaining: {len(self.bots)}", "white", (45, 45))
-        self.renderText(pygame.font.SysFont('Courier', 25), f"Health: {self.player.health}", "white", (30, 1050))
+        self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Bots remainaining: {len(self.bots)}", "white", (45, 45))
+        self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Health: {self.player.health}", "white", (30, 1050))
+        if self.player.currentItem != None:
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Current Weapon: {self.player.currentItem.name}", "white", (30, 600))
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"{self.player.currentItem.ammo[0]}/{self.player.currentItem.ammo[1]}", "white", (1850, 1050))
+        else:
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Current Weapon: None", "white", (30, 600))
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), "No weapon equipped", "white", (1700, 1050))
+
+
+        if self.player.currentItem != None and self.player.currentItem.ammo[0] < self.player.currentItem.ammo[3] * 0.3333333:
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), "[R] RELOAD", "white", (900, 300))
 
 
         #self.player.rect = self.camera.applyRect(self.player.rect)
