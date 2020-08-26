@@ -73,7 +73,8 @@ TEXTURES = []
 MODELS = []
 
 ROOT = os.path.dirname(__file__)
-IMG = os.path.join(ROOT, 'img')
+RESOURCE = os.path.join(ROOT, 'resource')
+IMG = os.path.join(RESOURCE, 'img')
 MODELS = os.path.join(IMG, 'models')
 MASKS = os.path.join(MODELS, 'masks')
 TEXTURES = os.path.join(IMG, 'textures')

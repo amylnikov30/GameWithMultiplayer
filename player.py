@@ -17,7 +17,8 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = "TestPlayer"
-        self.image = self.game.playerMask
+        self.originalImage = self.game.playerMask
+        self.image = self.originalImage
         #self.image.fill(DARKBLUE)
         self.rect = self.image.get_rect(center=(x, y))
         # self.velx = 0
@@ -56,12 +57,13 @@ class Player(pygame.sprite.Sprite):
             now = pygame.time.get_ticks()
             if distance.length() <= item.pickupRad and self.currentItem == None and now - self.lastItemDropped > 700:
                 item.pickup(self)
-
-
+                holdingItem = pygame.image.load(os.path.join(MASKS, f'jacket_{self.currentItem.name}.png'))
+                self.originalImage = holdingItem
     def throwItems(self):
         self.lastItemDropped = pygame.time.get_ticks()
         if self.currentItem != None:
             self.currentItem.throw()
+            self.originalImage = self.game.playerMask
 
 
     def getPos(self):
@@ -97,8 +99,7 @@ class Player(pygame.sprite.Sprite):
                     self.currentItem.ammo[0] -= 1
                     #pygame.time.wait(self.currentItem.firerate)
         if mouse[2]: #right-click
-            if self.currentItem != None:
-                self.currentItem.throw()
+            self.throwItems()
                 #print("[PLAYER] Bullet fired")
         # for event in pygame.event.get():
         #     if event.type == pygame.KEYDOWN:# and event.type == pygame.KEYUP:
@@ -126,7 +127,7 @@ class Player(pygame.sprite.Sprite):
             if self.currentItem != None:
                 self.currentItem.reload()
         if keys[pygame.K_c]:
-            pass #self.slide()
+            self.game.focus = pygame.mouse.get_pos()
         if keys[pygame.K_SPACE]:
             now = pygame.time.get_ticks()
             if now - self.lastShot > FIRERATE:
@@ -221,7 +222,7 @@ class Player(pygame.sprite.Sprite):
         self.getKeys()
         self.pickupItems()
         self.rotateMouse()
-        self.image = pygame.transform.rotate(pygame.transform.scale(self.game.playerMask, (TILESIZE, TILESIZE)), self.rotation)
+        self.image = pygame.transform.rotate(pygame.transform.scale(self.originalImage, (64, 64)), self.rotation)
         self.rect = self.image.get_rect(center=center)
         #self.mesh = self.image.get_rect(center=center)
         self.rect.center = self.pos

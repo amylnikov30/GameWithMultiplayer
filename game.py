@@ -23,6 +23,7 @@ class Game:
         self.players = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.renderClipBrushesFlag = False
+        #self.focus = self.player
 
 
         self.loadData()
@@ -58,7 +59,7 @@ class Game:
         cursors = os.path.join(img, 'cursors')
         weapons = os.path.join(models, 'weapons')
 
-        self.playerMask = pygame.image.load(os.path.join(masks, 'charlie.png')).convert_alpha()
+        self.playerMask = pygame.image.load(os.path.join(masks, 'jacket.png')).convert_alpha()
         #pygame.transform.scale(self.playerMask, (TILESIZE, TILESIZE))
         self.mapImage = pygame.image.load(os.path.join(doors, 'door16.png')).convert_alpha()
         self.crosshair = pygame.image.load(os.path.join(cursors, 'crosshair.png')).convert_alpha()
@@ -68,7 +69,6 @@ class Game:
         self.weaponModels = {}
         for modelname in RIFLES:
             self.weaponModels[modelname] = pygame.image.load(os.path.join(weapons, RIFLES[modelname])).convert_alpha()
-        #
 
 
 
@@ -145,7 +145,9 @@ class Game:
     def update(self):
         self.sprites.update()
         self.items.update()
-        self.camera.update(self.player)
+        self.focus = self.player
+        self.camera.update(self.focus)
+
 
         botHits = pygame.sprite.groupcollide(self.bots, self.bullets, False, True)
         for hit in botHits:
@@ -162,7 +164,7 @@ class Game:
         while True:
             #self.p2 = self.network.send(self.p)
             #self.player2 = self.network.send(self.player1)
-            self.fps = self.clock.tick(300)
+            self.fps = self.clock.tick(0)
             self.events()
             self.update()
             self.render()
@@ -186,16 +188,18 @@ class Game:
 
 
         for sprite in self.sprites:
-            #self.camera.apply(sprite)
-            if not isinstance(sprite, Item):
+            self.camera.apply(sprite)
+            if isinstance(sprite, Item):
+                if sprite.render:
+                    self.window.blit(sprite.image, self.camera.apply(sprite))
+            else:
                 self.window.blit(sprite.image, self.camera.apply(sprite))
-
         # for player in self.players:
         #     self.window.blit(player.image, self.camera.apply(player))
 
-        for item in self.items:
-            if item.render:
-                self.window.blit(item.image, self.camera.apply(item))
+        # for item in self.items:
+        #     if item.render:
+        #         self.window.blit(item.image, self.camera.apply(item))
 
         if self.renderClipBrushesFlag:
             self.renderClipBrushes()
@@ -219,7 +223,7 @@ class Game:
 
 
         if self.player.currentItem != None and self.player.currentItem.ammo[0] < self.player.currentItem.ammo[3] * 0.3333333:
-            self.renderText(pygame.font.SysFont('Modern Warfare', 30), "[R] RELOAD", "white", (900, 300))
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), "[R] RELOAD", "red", (900, 300))
 
 
         #self.player.rect = self.camera.applyRect(self.player.rect)
