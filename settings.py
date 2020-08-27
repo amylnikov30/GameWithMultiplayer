@@ -21,7 +21,7 @@ def setMode():
 WIDTH = 1920    # 16 * 64 or 32 * 32 or 64 * 16
 HEIGHT = 1080  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 300
-TITLE = "Hotline Shadow Development Build 8.21.2020"
+TITLE = "Hotline Shadow Development Build 8.26.2020"
 BGCOLOR = DARKGREY
 
 TILESIZE = 32
@@ -67,6 +67,10 @@ PICKUP_RAD = 32
 
 
 #graphics
+
+
+RELOAD_OUTLINE = pygame.Rect(900, 300, 120, 60)
+RELOAD_BAR = pygame.Rect(900, 300, 120, 60)
 
 PARTICLES = []
 TEXTURES = []

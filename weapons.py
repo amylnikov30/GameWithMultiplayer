@@ -5,6 +5,7 @@ import sys
 from settings import *
 from enums import *
 from map import meshCollision
+from menu import *
 #from player import Player
 
 vector = pygame.Vector2
@@ -66,9 +67,26 @@ class Item(pygame.sprite.Sprite):
         magazines = 4
         magazineCapacity = 30
         total = 120
-        self.ammo = [currentMagazine, total, magazines, magazineCapacity]
+        self.ammo = {"currentMagazine":currentMagazine, "total":total, "magazines":magazines, "magazineCapacity":magazineCapacity}
         self.reloadTime = 1000
         self.lastReload = 0
+
+
+    def reloadingBar(self):
+        now = pygame.time.get_ticks()
+        progress = 1
+        coefficient = 120 / self.reloadTime
+        time = 0
+
+        if now - self.lastReload < self.reloadTime:
+            if time < self.reloadTime:
+                time += self.game.fps / 1000
+
+                width = time * coefficient
+
+                pygame.draw.rect(self.game.window, ORANGE, (900, 300, width, 30))
+
+
 
 
     def wallCollision(self, targetDir):
@@ -95,16 +113,16 @@ class Item(pygame.sprite.Sprite):
 
     def reload(self):
         now = pygame.time.get_ticks()
-        #if now - self.lastReload > self.reloadTime:
-        if self.ammo[1] > 0 and self.ammo[1] < self.ammo[3]:
-            self.ammo[0] += self.ammo[3]; self.ammo[1] = 0
-            self.lastReload = now
-        elif self.ammo[1] > 30:
-            preReload = self.ammo[0]
-            self.ammo[0] = self.ammo[3]; self.ammo[1] -= (self.ammo[3] - preReload)
-            self.lastReload = now
+        if now - self.lastReload > self.reloadTime:
+            if self.ammo["total"] > 0 and self.ammo["total"] <= self.ammo["magazineCapacity"]:
+                self.ammo["currentMagazine"] += self.ammo["total"]; self.ammo["total"] = 0
+
+            elif self.ammo["total"] > self.ammo["magazineCapacity"]:
+                preReload = self.ammo["currentMagazine"]
+                self.ammo["currentMagazine"] = self.ammo["magazineCapacity"]; self.ammo["total"] -= (self.ammo["magazineCapacity"] - preReload)
 
 
+        self.lastReload = now
     def throwAnimation(self, direction):
         targetPos = self.user.pos + 48 * direction
         vel = direction * THROWING_VEL

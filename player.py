@@ -92,11 +92,11 @@ class Player(pygame.sprite.Sprite):
         if mouse[0]: #left-click
             if self.currentItem != None:
                 now = pygame.time.get_ticks()
-                if now - self.lastShot > self.currentItem.firerate and self.currentItem.ammo[0] > 0 and now - self.currentItem.lastReload > self.currentItem.reloadTime:
+                if now - self.lastShot > self.currentItem.firerate and self.currentItem.ammo["currentMagazine"] > 0 and now - self.currentItem.lastReload > self.currentItem.reloadTime:
                     self.lastShot = now
                     direction = vector(1, 0).rotate(-self.rotation)
                     Bullet(self.game, self.pos, direction, self)
-                    self.currentItem.ammo[0] -= 1
+                    self.currentItem.ammo["currentMagazine"] -= 1
                     #pygame.time.wait(self.currentItem.firerate)
         if mouse[2]: #right-click
             self.throwItems()

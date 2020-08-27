@@ -144,4 +144,4 @@ class Camera:
     def update(self, target):
         x = -target.rect.centerx + (WIDTH/2)
         y = -target.rect.centery + (HEIGHT/2)
-        self.camera = pygame.Rect(x, y, self.width, self.height)
+        self.camera = pygame.Rect(x, y, WIDTH, HEIGHT)

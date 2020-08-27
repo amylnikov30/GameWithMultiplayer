@@ -52,6 +52,7 @@ class Game:
         self.mapSurface = self.map.makeMap()
         self.mapRect = self.mapSurface.get_rect()
 
+
         models = os.path.join(img, 'models')
         masks = os.path.join(models, 'masks')
         textures = os.path.join(img, 'textures')
@@ -63,8 +64,12 @@ class Game:
         #pygame.transform.scale(self.playerMask, (TILESIZE, TILESIZE))
         self.mapImage = pygame.image.load(os.path.join(doors, 'door16.png')).convert_alpha()
         self.crosshair = pygame.image.load(os.path.join(cursors, 'crosshair.png')).convert_alpha()
+        # self.cursor = pygame.cursors.load_xbm(os.path.join(CURSORS, 'crosshair.xbm'), self.crosshair)
+        # pygame.mouse.set_cursor(self.cursor)
         self.bulletImage = pygame.image.load(os.path.join(weapons, 'bullet.png')).convert_alpha()
         self.botImage = pygame.image.load(os.path.join(masks, 'manBlue_gun.png')).convert_alpha()
+        logo = pygame.image.load(os.path.join(IMG, 'logo.png'))
+        pygame.display.set_icon(logo)
         #self.weapon_m4a1 = pygame.image.load(os.path.join(weapons, 'm4a1.png'))
         self.weaponModels = {}
         for modelname in RIFLES:
@@ -110,7 +115,14 @@ class Game:
 
         pos = pygame.mouse.get_pos()
 
-        self.window.blit(self.crosshair, pos)
+        rect = self.crosshair.get_rect()
+        rect.center = pos
+
+        center = ((pos[0] - rect.right)/2, (pos[1] - rect.left)/2)
+
+        self.window.blit(self.crosshair, rect)
+
+        #pygame.mouse.set_cursor(*pygame.cursors.broken_x)
 
 
     def renderText(self, font, what, color, where):
@@ -188,19 +200,28 @@ class Game:
 
 
         for sprite in self.sprites:
-            self.camera.apply(sprite)
+            #self.camera.apply(sprite)
             if isinstance(sprite, Item):
                 if sprite.render:
                     self.window.blit(sprite.image, self.camera.apply(sprite))
+                else:
+                    sprite.reloadingBar()
             else:
                 self.window.blit(sprite.image, self.camera.apply(sprite))
+
         # for player in self.players:
         #     self.window.blit(player.image, self.camera.apply(player))
 
         # for item in self.items:
-        #     if item.render:
-        #         self.window.blit(item.image, self.camera.apply(item))
-
+        #     if not item.render:
+        #         now = pygame.time.get_ticks()
+        #         if now - item.lastReload <= 500:
+        #             print("Reload Bar")
+        #             progress = 0
+        #             pygame.draw.rect(self.window, ORANGE, RELOAD_OUTLINE, 1)
+        #             while progress < 60:
+        #                 progress += 2
+        #                 pygame.draw.rect(self.window, ORANGE, RELOAD_BAR)
         if self.renderClipBrushesFlag:
             self.renderClipBrushes()
             #pygame.draw.rect(self.window, RED, sprite, 2)
@@ -216,13 +237,13 @@ class Game:
         self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Health: {self.player.health}", "white", (30, 1050))
         if self.player.currentItem != None:
             self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Current Weapon: {self.player.currentItem.name}", "white", (30, 600))
-            self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"{self.player.currentItem.ammo[0]}/{self.player.currentItem.ammo[1]}", "white", (1850, 1050))
+            self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"{self.player.currentItem.ammo['currentMagazine']}/{self.player.currentItem.ammo['total']}", "white", (1850, 1050))
         else:
             self.renderText(pygame.font.SysFont('Modern Warfare', 30), f"Current Weapon: None", "white", (30, 600))
             self.renderText(pygame.font.SysFont('Modern Warfare', 30), "No weapon equipped", "white", (1700, 1050))
 
 
-        if self.player.currentItem != None and self.player.currentItem.ammo[0] < self.player.currentItem.ammo[3] * 0.3333333:
+        if self.player.currentItem != None and self.player.currentItem.ammo["currentMagazine"] < self.player.currentItem.ammo["magazineCapacity"] * 0.3333333:
             self.renderText(pygame.font.SysFont('Modern Warfare', 30), "[R] RELOAD", "red", (900, 300))
 
 

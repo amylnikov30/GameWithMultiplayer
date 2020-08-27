@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="293">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="200" height="120" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="294">
  <tileset firstgid="1" name="shipment" tilewidth="16" tileheight="16" tilecount="8040" columns="120">
   <image source="../resource/img/textures/Spire Sheets/Texture Spirtes/shipment.png" width="1920" height="1080"/>
  </tileset>
@@ -268,20 +268,21 @@
   <object id="90" name="wall" x="2064" y="991" width="75" height="17"/>
   <object id="120" name="wall" x="1472" y="1264" width="208" height="79"/>
   <object id="122" name="wall" x="1472" y="1343" width="15" height="32"/>
-  <object id="154" name="wall" x="976" y="369" width="23" height="1087"/>
-  <object id="155" name="wall" x="2139" y="369" width="18" height="1087"/>
-  <object id="157" name="wall" x="999" y="369" width="1140" height="20"/>
-  <object id="158" name="wall" x="1408" y="1423" width="256" height="5"/>
+  <object id="154" name="wall" x="904" y="369" width="95" height="1087"/>
+  <object id="155" name="wall" x="2139" y="369" width="106" height="1087"/>
+  <object id="157" name="wall" x="999" y="304" width="1140" height="85"/>
+  <object id="158" name="wall" x="1408" y="1423" width="256" height="33"/>
   <object id="180" name="wall" x="1280" y="1408" width="128" height="48"/>
-  <object id="226" name="wall" x="976" y="1456" width="1181" height="14"/>
+  <object id="226" name="wall" x="976" y="1456" width="1181" height="161"/>
   <object id="231" name="wall" x="1424" y="462" width="32" height="34"/>
-  <object id="279" name="wall" x="1680" y="1312" width="32" height="31"/>
+  <object id="279" name="wall" x="1680" y="1328" width="15" height="15"/>
   <object id="280" name="wall" x="1456" y="1408" width="16" height="15"/>
   <object id="281" name="wall" x="2032" y="752" width="16" height="32"/>
   <object id="282" name="wall" x="2048" y="768" width="16" height="32"/>
   <object id="283" name="wall" x="1088" y="800" width="63" height="15"/>
   <object id="284" name="wall" x="1680" y="1440" width="16" height="16"/>
-  <object id="285" name="wall" x="1664" y="1424" width="16" height="16"/>
+  <object id="285" name="wall" x="1664" y="1423" width="16" height="17"/>
+  <object id="293" name="wall" x="1696" y="1312" width="15" height="15"/>
  </objectgroup>
  <objectgroup id="4" name="spawns">
   <object id="272" name="playerSpawn" x="1058" y="1255"/>
